@@ -1,0 +1,592 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/*  NAVBAR */
+
+.nome-sito {
+  font-size: 30px;
+  color: #ffcc00;
+}
+.logo {
+  margin-left: 20px;
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+}
+.custom-navbar {
+  margin-top: 15px;
+  border-radius: 30px;
+  justify-self: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  width: 95%;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.custom-navbar .nav-link {
+  color: #ffcc00 !important;
+  font-size: 18px;
+  margin-right: 15px;
+}
+
+/*  BACKGROUND ANIMATO */
+body {
+  background: linear-gradient(-45deg, #000000, #434343, #000000, #222222);
+  background-size: 400% 400%;
+  animation: gradientAnimation 120s ease infinite;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Animazione sfondo */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/*  responsive */
+@media (max-width: 768px) {
+  .carousel {
+    height: 400px;
+  }
+
+  .carousel-image {
+    height: 400px;
+  }
+
+  .search-container {
+    top: 220px;
+  }
+
+  .vola-con {
+    margin-top: 40px;
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-box {
+    padding: 15px;
+  }
+
+  .form-control {
+    height: 35px;
+    font-size: 14px;
+  }
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+}
+
+/* Aggiustamento posizione del footer */
+.position-absolute.bottom-0.w-100 {
+  margin-top: auto;
+}
+/* Modifica dell'altezza del carosello */
+.carousel {
+  margin-top: 80px;
+  border-radius: 30px;
+  justify-self: center;
+  height: 650px;
+  overflow: hidden;
+  width: 95%;
+  margin-bottom: 15px;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 650px;
+  object-fit: cover;
+  filter: brightness(80%);
+}
+
+/* Posizionamento  del form di ricerca */
+.search-container {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+}
+
+/* Aggiustamento dello stile del box di ricerca */
+.search-box {
+  color: #ffcc00;
+  position: relative;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  max-width: 850px;
+  margin: auto;
+  animation: gradientAnimation 120s ease infinite;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+/*  Stile per i tab */
+.nav-tabs {
+  display: flex;
+  justify-content: center;
+  border-bottom: none;
+}
+
+.nav-tabs .nav-item {
+  flex: 1;
+  text-align: center;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+}
+
+/*  Campi di input */
+.form-control {
+  height: 40px;
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+.vola-con {
+  color: #ffcc00;
+  margin-top: 70px;
+  font-size: 40px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+}
+
+.cerca {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: wheat;
+  border: none;
+  border-radius: 15px;
+}
+
+.partenza {
+  display: flex;
+  justify-content: left;
+}
+
+.arrivo {
+  display: flex;
+  justify-content: left;
+}
+
+/*  Campi data */
+input[type="date"] {
+  text-align: center;
+}
+
+/* Pulsanti quantità (Adulti, Bambini, Neonati) */
+.quantity-buttons {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-buttons button {
+  border: none;
+  background: #ddd;
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin: 0 5px;
+}
+
+.accedi-form {
+  color: white;
+}
+
+/* modal acceddi il background */
+.modal-form {
+  display: flex;
+  margin-top: 169px;
+  backdrop-filter: blur(10px);
+}
+
+.header-accedi {
+  border-bottom: none;
+  color: #ffcc00;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.modal-body {
+  color: #ffcc00;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+/* Riduce la dimensione della card */
+.flight-card {
+  color: #ffcc00;
+  background-color: #faf4f4ea;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.ritorno-card {
+  border-top: 1px;
+}
+
+/* Riduce il margine delle immagini */
+.airline-logo {
+  width: 60px;
+  height: auto;
+}
+
+/*  le durate */
+.duration {
+  font-size: 13px;
+  color: #9fadee;
+  margin-bottom: 2px;
+}
+
+/* Testo della data */
+.flight-date {
+  font-size: 12px;
+  font-weight: bold;
+  color: #9fadee;
+  margin-bottom: 2px;
+}
+
+/* Prezzo */
+.text-success {
+  font-size: 16px;
+}
+
+.price-section {
+  text-align: center;
+  align-content: center;
+  border-left: 1px solid #463c15;
+}
+
+.btn-continue {
+  background-color: #032549;
+  border: none;
+}
+
+/* --- STILE GENERALE --- */
+
+.booking-container {
+  max-width: 90%;
+  margin: auto;
+  padding: 20px;
+}
+
+/* --- STILE DELLA SIDEBAR --- */
+.sidebar {
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.flight-summary {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  background: #1f1f1f;
+}
+
+.flight-summary h5 {
+  font-size: 18px;
+  color: #ffcc00;
+}
+
+.flight-summary p {
+  font-size: 15px;
+  color: #bbb;
+}
+
+.flight-summary hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.flight-summary h4 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1dd1a1;
+}
+
+/* --- FORM PASSAGGERO --- */
+.passenger-form {
+  background: #1e1e1e;
+  border-radius: 15px;
+}
+/* --- INPUT --- */
+.passenger-form input,
+.passenger-form select {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 10px;
+  transition: 0.3s ease-in-out;
+}
+
+/* --- STILE BAGAGLI --- */
+.baggage-options {
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  background: #1f1f1f;
+  padding: 20px;
+  border-radius: 15px;
+  transition: 0.3s;
+  color: #ffcc00;
+}
+
+/* --- SELECT  --- */
+.baggage-options select {
+  background: #2d2d2d;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+}
+
+.baggage-options select:focus {
+  border-color: #1dd1a1;
+  box-shadow: 0px 0px 8px rgba(29, 209, 161, 0.8);
+}
+
+/* --- PULSANTE  --- */
+.btn-continue {
+  background: #007bff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+  border-radius: 5px;
+}
+
+.btn-continue:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(6, 7, 6, 0.5);
+}
+
+/* Stile generale della pagina */
+
+.payment-container {
+  max-width: 90%;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Stile delle card */
+.contact-form,
+.payment-form,
+.flight-summary {
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.contact-form h4,
+.payment-form h4,
+.flight-summary h5 {
+  color: #ffcc00; /* Giallo dorato */
+  margin-bottom: 15px;
+}
+
+/* Stile input e select */
+.contact-form input,
+.contact-form select,
+.payment-form input,
+.payment-form select {
+  background: #747272;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 12px 15px;
+  border-radius: 10px;
+  transition: 0.3s ease-in-out;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.payment-form input:focus,
+.payment-form select:focus {
+  background: #2a2a2a;
+  border-color: #1dd1a1;
+  box-shadow: 0px 0px 8px rgba(29, 209, 161, 0.8);
+  color: white;
+  transition: 0.3s ease-in-out;
+}
+
+/* Stile delle label */
+.contact-form label,
+.payment-form label {
+  color: #bbb;
+  font-weight: 500;
+}
+
+/* Stile riepilogo volo */
+.flight-summary {
+  color: #fff;
+}
+
+.flight-summary h5 {
+  color: #ffcc00;
+}
+
+.flight-summary p {
+  margin: 5px 0;
+  color: #ddd;
+}
+
+/* Pulsante di pagamento */
+.payment-form .btn-success {
+  background-color: #008f39;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .contact-form,
+  .payment-form,
+  .flight-summary {
+    padding: 15px;
+  }
+
+  .contact-form h4,
+  .payment-form h4,
+  .flight-summary h5 {
+    font-size: 18px;
+  }
+
+  .payment-form .btn-success {
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+.payment-form .btn-success:hover {
+  background-color: #00b74a;
+  box-shadow: 0 0 10px rgba(0, 255, 100, 0.5);
+}
+
+/* nasconde la freccia del dropdown di default */
+#dropdown-profile::after {
+  display: none !important;
+}
+
+/* Dropdown migliorato */
+.dropdown-menu-custom {
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(10px);
+  width: 400px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+  justify-content: space-between;
+  color: white;
+}
+
+/* Testo dentro il dropdown */
+.profile-info {
+  padding: 10px;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Avatar rotondo */
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+}
+
+/* Dropdown freccia */
+.dropdown-arrow {
+  font-size: 12px;
+  color: #ffcc00;
+  position: relative;
+  top: 1px;
+}
+
+.testo-risultati {
+  color: #ffcc00;
+}
+
+/* FOOTER */
+
+.footer-button {
+  background-color: #032549;
+  border: none;
+  font-weight: bold;
+}
+footer {
+  justify-self: center;
+  border-radius: 30px;
+  width: 95%;
+  background-color: rgba(0, 0, 0, 0.9);
+  text-align: center;
+  padding: 20px;
+  color: rgb(207, 205, 205);
+}
+
+footer a {
+  color: #bbb;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: white;
+}
