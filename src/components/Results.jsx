@@ -65,9 +65,15 @@ const Results = () => {
       try {
         setLoading(true);
         setError(null);
+
+        const origineCode = searchParams.partenzaCode || searchParams.partenza;
+        const destinazioneCode = searchParams.arrivoCode || searchParams.arrivo;
+
+        console.log("Cercando voli con codici:", origineCode, destinazioneCode);
+
         let data = await searchFlights(
-          searchParams.partenza,
-          searchParams.arrivo,
+          origineCode,
+          destinazioneCode,
           searchParams.dataAndata,
           searchParams.dataRitorno,
           searchParams.adulti
@@ -82,6 +88,7 @@ const Results = () => {
         setFlights(uniqueFlights);
         setFilteredFlights(uniqueFlights);
       } catch (err) {
+        console.error("Errore dettagliato:", err);
         setError("Errore nel recupero dei voli. Riprova più tardi.");
       } finally {
         setLoading(false);

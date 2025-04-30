@@ -73,12 +73,12 @@ function Footer() {
               type="button"
               className="btn-sm footer-button rounded-pill mt-3"
             >
-              Codice Servizio
+              <a href="https://7vzefn.mimo.run/index.html">Codice Servizio</a>
             </Button>
           </Col>
         </Row>
         <Row>
-          <Col className="mb-2 mt-2 copyright">© 2025 Baldesito, Inc.</Col>
+          <Col className="mb-2 mt-2 copyright">© 2025 Baldesito</Col>
         </Row>
       </Container>
     </footer>

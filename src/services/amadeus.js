@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // Variabili API
-const AMADEUS_CLIENT_ID = "iH7oVU4ZNAFzmidkPzdcSNJf6x9dA1be";
-const AMADEUS_CLIENT_SECRET = "SR4LaPWukg15B4R7";
+const AMADEUS_CLIENT_ID = import.meta.env.VITE_AMADEUS_CLIENT_ID;
+const AMADEUS_CLIENT_SECRET = import.meta.env.VITE_AMADEUS_CLIENT_SECRET;
 
 const AMADEUS_AUTH_URL =
   "https://test.api.amadeus.com/v1/security/oauth2/token";
@@ -14,13 +14,20 @@ let tokenExpiry = null;
 
 // Funzione per ottenere il token
 const getToken = async () => {
+  // Verifica che le variabili d'ambiente siano definite
+  if (!AMADEUS_CLIENT_ID || !AMADEUS_CLIENT_SECRET) {
+    console.error("Credenziali Amadeus mancanti nelle variabili d'ambiente");
+    throw new Error(
+      "Configurazione API incompleta. Contatta l'amministratore."
+    );
+  }
   try {
     if (cachedToken && tokenExpiry && new Date() < tokenExpiry) {
       console.log("Token ancora valido, utilizzo quello in cache.");
       return cachedToken;
     }
 
-    console.log(" Richiesta nuovo token...");
+    console.log("Richiesta nuovo token...");
     const response = await axios.post(
       AMADEUS_AUTH_URL,
       new URLSearchParams({

@@ -14,11 +14,15 @@ const Home = () => {
     "https://cdn.pixabay.com/photo/2017/06/24/00/54/milan-cathedral-2436458_1280.jpg",
     "https://cdn.pixabay.com/photo/2016/11/05/08/31/rome-1799670_1280.jpg",
     "https://cdn.pixabay.com/photo/2020/03/10/17/33/paris-4919653_1280.jpg",
-    "https://cdn.pixabay.com/photo/2017/05/08/16/25/paris-2295794_960_720.jpg",
     "https://cdn.pixabay.com/photo/2020/02/01/02/36/london-eye-4809387_1280.jpg",
     "https://cdn.pixabay.com/photo/2018/02/27/06/30/skyscrapers-3184798_1280.jpg",
     "https://cdn.pixabay.com/photo/2019/04/02/20/45/landscape-4098802_1280.jpg",
     "https://cdn.pixabay.com/photo/2022/04/03/22/05/buildings-7109918_1280.jpg",
+    "https://cdn.pixabay.com/photo/2017/06/05/11/01/airport-2373727_1280.jpg",
+    "https://cdn.pixabay.com/photo/2021/10/02/09/18/airplane-6674689_1280.jpg",
+    "https://cdn.pixabay.com/photo/2023/03/11/11/34/travelling-7844283_1280.jpg",
+    "https://cdn.pixabay.com/photo/2020/09/01/15/05/aircraft-cabin-5535467_1280.jpg",
+    "https://cdn.pixabay.com/photo/2018/09/25/17/14/airplane-3702676_1280.jpg",
   ];
 
   const navigate = useNavigate();
@@ -28,6 +32,187 @@ const Home = () => {
   const [partenza, setPartenza] = useState("");
   const [arrivo, setArrivo] = useState("");
 
+  const [partenzaCode, setPartenzaCode] = useState("");
+  const [arrivoCode, setArrivoCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const convertToAirportCode = async (query) => {
+    try {
+      // Implementazione della chiamata API per ottenere il codice aeroportuale
+      const response = await fetch(
+        `/api/airports/search?query=${encodeURIComponent(query)}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Errore nella ricerca dell'aeroporto");
+      }
+
+      const data = await response.json();
+
+      // Verifica se abbiamo risultati
+      if (data && data.length > 0) {
+        // Restituisce il codice IATA del primo risultato
+        return data[0].iataCode;
+      } else {
+        throw new Error(`Nessun aeroporto trovato per "${query}"`);
+      }
+    } catch (error) {
+      console.error("Errore nella conversione aeroporto:", error);
+      throw error;
+    }
+  };
+
+  const getAirportCodeFromMap = (query) => {
+    // Mappa espansa di città/aeroporti e relativi codici IATA
+    const airportMap = {
+      // Italia
+      roma: "FCO",
+      fiumicino: "FCO",
+      rome: "FCO",
+      milano: "MXP",
+      milan: "MXP",
+      malpensa: "MXP",
+      linate: "LIN",
+      "milano linate": "LIN",
+      bergamo: "BGY",
+      "orio al serio": "BGY",
+      napoli: "NAP",
+      naples: "NAP",
+      venezia: "VCE",
+      venice: "VCE",
+      firenze: "FLR",
+      florence: "FLR",
+      torino: "TRN",
+      turin: "TRN",
+      bologna: "BLQ",
+      palermo: "PMO",
+      catania: "CTA",
+      bari: "BRI",
+      cagliari: "CAG",
+      pisa: "PSA",
+      brindisi: "BDS",
+      lamezia: "SUF",
+      "lamezia terme": "SUF",
+      pescara: "PSR",
+      alghero: "AHO",
+      treviso: "TSF",
+
+      // Europa
+      londra: "LHR",
+      london: "LHR",
+      heathrow: "LHR",
+      gatwick: "LGW",
+      "london gatwick": "LGW",
+      stansted: "STN",
+      "london stansted": "STN",
+      parigi: "CDG",
+      paris: "CDG",
+      "charles de gaulle": "CDG",
+      orly: "ORY",
+      "paris orly": "ORY",
+      madrid: "MAD",
+      barcellona: "BCN",
+      barcelona: "BCN",
+      berlino: "BER",
+      berlin: "BER",
+      amsterdam: "AMS",
+      schiphol: "AMS",
+      francoforte: "FRA",
+      frankfurt: "FRA",
+      monaco: "MUC",
+      munich: "MUC",
+      vienna: "VIE",
+      "vienna airport": "VIE",
+      zurigo: "ZRH",
+      zurich: "ZRH",
+      ginevra: "GVA",
+      geneva: "GVA",
+      bruxelles: "BRU",
+      brussels: "BRU",
+      lisbona: "LIS",
+      lisbon: "LIS",
+      atene: "ATH",
+      athens: "ATH",
+      dublino: "DUB",
+      dublin: "DUB",
+      praga: "PRG",
+      prague: "PRG",
+      budapest: "BUD",
+      varsavia: "WAW",
+      warsaw: "WAW",
+      copenaghen: "CPH",
+      copenhagen: "CPH",
+      stoccolma: "ARN",
+      stockholm: "ARN",
+      oslo: "OSL",
+      helsinki: "HEL",
+
+      // Nord America
+      "new york": "JFK",
+      newyork: "JFK",
+      newark: "EWR",
+      "los angeles": "LAX",
+      la: "LAX",
+      chicago: "ORD",
+      miami: "MIA",
+      toronto: "YYZ",
+      "san francisco": "SFO",
+      boston: "BOS",
+      washington: "IAD",
+      atlanta: "ATL",
+      dallas: "DFW",
+      houston: "IAH",
+      denver: "DEN",
+      seattle: "SEA",
+      vancouver: "YVR",
+      montreal: "YUL",
+
+      // Resto del mondo
+      tokyo: "HND",
+      "tokyo haneda": "HND",
+      narita: "NRT",
+      "tokyo narita": "NRT",
+      dubai: "DXB",
+      "hong kong": "HKG",
+      singapore: "SIN",
+      bangkok: "BKK",
+      pechino: "PEK",
+      beijing: "PEK",
+      shanghai: "PVG",
+      seoul: "ICN",
+      incheon: "ICN",
+      sydney: "SYD",
+      melbourne: "MEL",
+      auckland: "AKL",
+      johannesburg: "JNB",
+      "cape town": "CPT",
+      delhi: "DEL",
+      "new delhi": "DEL",
+      mumbai: "BOM",
+      bombay: "BOM",
+      "rio de janeiro": "GIG",
+      "sao paulo": "GRU",
+    };
+
+    // Normalizza la query (minuscolo e rimuovi spazi extra)
+    const normalizedQuery = query.toLowerCase().trim();
+
+    // Controllo diretto della mappa
+    if (airportMap[normalizedQuery]) {
+      return airportMap[normalizedQuery];
+    }
+
+    // Cerca corrispondenze parziali
+    for (const [key, code] of Object.entries(airportMap)) {
+      if (normalizedQuery.includes(key) || key.includes(normalizedQuery)) {
+        return code;
+      }
+    }
+
+    // Se non troviamo corrispondenze, restituiamo null
+    return "FCO";
+  };
   // Funzioni per generare date predefinite
   const getDefaultDepartureDate = () => {
     const date = new Date();
@@ -99,15 +284,43 @@ const Home = () => {
       return;
     }
 
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      // Formatta le date per l'API
+      // Ottieni i codici IATA
+      let partenzaIATA = getAirportCodeFromMap(partenza);
+      let arrivoIATA = getAirportCodeFromMap(arrivo);
+
+      // Assicurati che i codici siano validi (3 lettere maiuscole)
+      if (!partenzaIATA || partenzaIATA.length !== 3) {
+        partenzaIATA = "FCO"; // Default a Roma se non valido
+      } else {
+        partenzaIATA = partenzaIATA.toUpperCase();
+      }
+
+      if (!arrivoIATA || arrivoIATA.length !== 3) {
+        arrivoIATA = "LHR"; // Default a Londra se non valido
+      } else {
+        arrivoIATA = arrivoIATA.toUpperCase();
+      }
+
+      // Evita codici identici
+      if (partenzaIATA === arrivoIATA) {
+        arrivoIATA = partenzaIATA === "FCO" ? "LHR" : "FCO";
+      }
+
       const formatDateForAPI = (date) => {
         return date ? date.toISOString().split("T")[0] : null;
       };
 
+      console.log(
+        `Ricerca voli: da ${partenza} (${partenzaIATA}) a ${arrivo} (${arrivoIATA})`
+      );
+
       const results = await searchFlights(
-        partenza,
-        arrivo,
+        partenzaIATA,
+        arrivoIATA,
         formatDateForAPI(dataAndata),
         tripType === "roundTrip" ? formatDateForAPI(dataRitorno) : null,
         adulti
@@ -118,7 +331,9 @@ const Home = () => {
           flights: results,
           tripType,
           partenza,
+          partenzaCode: partenzaIATA,
           arrivo,
+          arrivoCode: arrivoIATA,
           dataAndata: formatDateForAPI(dataAndata),
           dataRitorno:
             tripType === "roundTrip" ? formatDateForAPI(dataRitorno) : null,
@@ -129,7 +344,11 @@ const Home = () => {
       });
     } catch (error) {
       console.error("Errore nella ricerca voli:", error);
-      alert("Si è verificato un errore durante la ricerca. Riprova più tardi.");
+      setErrorMessage(
+        "Si è verificato un errore durante la ricerca. Riprova più tardi."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
