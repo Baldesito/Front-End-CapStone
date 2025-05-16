@@ -1,5 +1,28 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+
+:root {
+  --primary: #3490dc;
+  --primary-dark: #2779bd;
+  --secondary: #6c63ff;
+  --accent: #ff6b6b;
+  --light: #f8fafc;
+  --dark: #2d3748;
+  --gray: #a0aec0;
+  --success: #68d391;
+  --warning: #f6e05e;
+  --danger: #fc8181;
+  --text: #4a5568;
+  --border-radius: 10px;
+  --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Reset e stile base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 /*  NAVBAR */
 
 .nome-sito {
