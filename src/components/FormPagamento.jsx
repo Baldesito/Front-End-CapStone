@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import { contattiAPI, pagamentiAPI, prenotazioniAPI } from "../config/api";
 import "../index.css";
 
 const FormPagamento = () => {
@@ -181,62 +182,17 @@ const FormPagamento = () => {
       console.log("Dati utente:", userData);
 
       // Prima richiesta: salva il contatto
-      const rispostaContatto = await fetch(
-        "http://localhost:8080/api/contatti/salva",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentToken}`,
-          },
-          body: JSON.stringify(contatto),
-          credentials: "include",
-        }
-      );
-
+      const rispostaContatto = await contattiAPI.save(contatto);
       console.log("Status risposta contatto:", rispostaContatto.status);
-
-      if (!rispostaContatto.ok) {
-        const errorText = await rispostaContatto.text();
-        console.error("Errore dal server (contatto):", errorText);
-
-        if (rispostaContatto.status === 403) {
-          throw new Error(
-            "Non hai l'autorizzazione per effettuare questa operazione. Prova a effettuare nuovamente il login."
-          );
-        }
-
-        throw new Error(`Errore ${rispostaContatto.status}: ${errorText}`);
-      }
 
       // Seconda richiesta: salva i dati di pagamento
       console.log("Invio dati pagamento:", datiPagamento);
 
-      const rispostaPagamento = await fetch(
-        "http://localhost:8080/api/pagamenti/salva",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${currentToken}`,
-          },
-          body: JSON.stringify(datiPagamento),
-          credentials: "include",
-        }
-      );
-
+      const rispostaPagamento = await pagamentiAPI.save(datiPagamento);
       console.log("Status risposta pagamento:", rispostaPagamento.status);
 
-      if (!rispostaPagamento.ok) {
-        const errorText = await rispostaPagamento.text();
-        console.error("Errore dal server (pagamento):", errorText);
-        throw new Error(
-          `Errore nel salvataggio del pagamento: ${rispostaPagamento.status}`
-        );
-      }
-
       // Se il pagamento è stato completato con successo, procedi alla creazione della prenotazione
-      if (rispostaPagamento.ok) {
+      if (rispostaPagamento.status === 200) {
         // Determina l'ID del volo correttamente in base alla struttura del dato
         let voloId;
 
@@ -312,29 +268,22 @@ const FormPagamento = () => {
 
         console.log("Invio richiesta prenotazione:", prenotazioneRequest);
 
-        const rispostaPrenotazione = await fetch(
-          "http://localhost:8080/api/prenotazioni/crea",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${currentToken}`,
-            },
-            body: JSON.stringify(prenotazioneRequest),
-            credentials: "include",
-          }
-        );
+        try {
+          const rispostaPrenotazione = await prenotazioniAPI.create(
+            prenotazioneRequest
+          );
+          console.log(
+            "Status risposta prenotazione:",
+            rispostaPrenotazione.status
+          );
 
-        console.log(
-          "Status risposta prenotazione:",
-          rispostaPrenotazione.status
-        );
-
-        if (!rispostaPrenotazione.ok) {
-          const errorText = await rispostaPrenotazione.text();
-          console.error("Errore dal server (prenotazione):", errorText);
-
+          const prenotazioneData = rispostaPrenotazione.data;
+          console.log("Prenotazione creata con successo:", prenotazioneData);
+        } catch (prenotazioneError) {
           // Verifica se l'errore è relativo all'invio dell'email
+          const errorText =
+            prenotazioneError.response?.data?.message || prenotazioneError.message;
+
           if (
             errorText.includes("Mail server") ||
             errorText.includes("MessagingException") ||
@@ -355,13 +304,8 @@ const FormPagamento = () => {
             return;
           }
 
-          throw new Error(
-            `Errore nella creazione della prenotazione: ${errorText}`
-          );
+          throw prenotazioneError;
         }
-
-        const prenotazioneData = await rispostaPrenotazione.json();
-        console.log("Prenotazione creata con successo:", prenotazioneData);
 
         // Successo
         alert("Pagamento e prenotazione completati con successo!");

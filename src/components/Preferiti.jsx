@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { preferitiAPI } from "../config/api";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -56,11 +57,8 @@ const Preferiti = () => {
     const recuperaPreferiti = async () => {
       if (!user) return;
       try {
-        const risposta = await fetch(
-          `http://localhost:8080/api/preferiti/utente/${user.id}`,
-          { headers: { Authorization: `Bearer ${user.token}` } }
-        );
-        const dati = await risposta.json();
+        const risposta = await preferitiAPI.getByUser(user.id);
+        const dati = risposta.data;
         const ordinati = dati.sort(
           (a, b) => new Date(a.dataPartenza) - new Date(b.dataPartenza)
         );
@@ -76,10 +74,7 @@ const Preferiti = () => {
 
   const rimuoviPreferito = async (id) => {
     try {
-      await fetch(`http://localhost:8080/api/preferiti/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      await preferitiAPI.remove(id);
       setPreferiti(preferiti.filter((f) => f.id !== id));
     } catch (errore) {
       console.error("Errore rimozione preferito:", errore);

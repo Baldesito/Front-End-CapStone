@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Form, Button, Modal, Toast } from "react-bootstrap";
 import { FaUserEdit, FaSignOutAlt, FaEye, FaEyeSlash } from "react-icons/fa";
+import { authAPI } from "../config/api";
 
 const ProfileDropdown = ({ user, onLogout }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -34,29 +35,17 @@ const ProfileDropdown = ({ user, onLogout }) => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/utenti/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await authAPI.updateProfile(user.id, formData);
 
-      if (response.ok) {
+      if (response.status === 200) {
         setIsEditing(false);
         setShowToast(true);
         localStorage.setItem("user", JSON.stringify({ ...user, ...formData }));
         setTimeout(() => window.location.reload(), 1000);
-      } else {
-        alert("Errore nell'aggiornamento del profilo.");
       }
     } catch (error) {
       console.error("Errore:", error);
-      alert("Errore di connessione.");
+      alert(error.response?.data?.message || "Errore nell'aggiornamento del profilo.");
     }
   };
 

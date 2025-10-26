@@ -17,10 +17,14 @@ const Navigation = () => {
     }
   }, []);
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    window.location.reload();
+    window.location.href = "/";
   };
 
   return (
@@ -60,7 +64,11 @@ const Navigation = () => {
         </Container>
       </Navbar>
 
-      <FormAccedi show={showModal} onHide={() => setShowModal(false)} />
+      <FormAccedi
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        onLogin={handleLogin}
+      />
     </div>
   );
 };
