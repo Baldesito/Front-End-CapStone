@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import CustomDateOfBirthInput from "./CustomDateOfBirthInput";
+import { passeggeriAPI } from "../config/api";
 import "../index.css";
 
 const FormPrenota = () => {
@@ -103,25 +104,8 @@ const FormPrenota = () => {
         throw new Error("Devi essere loggato per completare questa operazione");
       }
 
-      const risposta = await fetch(
-        "http://localhost:8080/api/passaggeri/crea",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${utente.token}`,
-          },
-          body: JSON.stringify(datiPasseggero),
-        }
-      );
-
-      if (!risposta.ok) {
-        const erroreText = await risposta.text();
-        console.error("Risposta del server:", erroreText);
-        throw new Error("Errore durante salvataggio dati passeggero");
-      }
-
-      const passeggeroSalvato = await risposta.json();
+      const risposta = await passeggeriAPI.create(datiPasseggero);
+      const passeggeroSalvato = risposta.data;
       console.log("Passeggero salvato:", passeggeroSalvato);
 
       navigate("/payment", {

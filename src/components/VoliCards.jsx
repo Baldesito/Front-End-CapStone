@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { voliAPI, preferitiAPI } from "../config/api";
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -147,17 +148,8 @@ const VoliCards = ({
     if (!user) return null;
 
     try {
-      const res = await fetch("http://localhost:8080/api/voli/crea", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify(datiVolo),
-      });
-
-      if (!res.ok) throw new Error("Errore salvataggio volo");
-      return await res.json();
+      const res = await voliAPI.create(datiVolo);
+      return res.data;
     } catch (error) {
       console.error("Errore nel salvare il volo:", error);
       return null;
@@ -167,17 +159,8 @@ const VoliCards = ({
   // Funzione per aggiungere ai preferiti
   const aggiungiAiPreferiti = async (idUtente, idVolo, token) => {
     try {
-      const res = await fetch("http://localhost:8080/api/preferiti/aggiungi", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ utenteId: idUtente, voloId: idVolo }),
-      });
-
-      if (!res.ok) throw new Error("Errore nell'aggiunta ai preferiti");
-      return await res.json();
+      const res = await preferitiAPI.add({ utenteId: idUtente, voloId: idVolo });
+      return res.data;
     } catch (error) {
       console.error("Errore nell'aggiungere ai preferiti:", error);
       return null;
@@ -187,29 +170,12 @@ const VoliCards = ({
   // Funzione per rimuovere dai preferiti
   const rimuoviDaiPreferiti = async (idUtente, idVolo, token) => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/preferiti/utente/${idUtente}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!res.ok) throw new Error("Errore nel recupero dei preferiti");
-
-      const preferiti = await res.json();
+      const res = await preferitiAPI.getByUser(idUtente);
+      const preferiti = res.data;
       const match = preferiti.find((p) => p.voloId === idVolo);
 
       if (match) {
-        const deleteRes = await fetch(
-          `http://localhost:8080/api/preferiti/${match.id}`,
-          {
-            method: "DELETE",
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (!deleteRes.ok)
-          throw new Error("Errore nella rimozione dai preferiti");
+        await preferitiAPI.remove(match.id);
       }
     } catch (error) {
       console.error("Errore nel rimuovere dai preferiti:", error);
@@ -263,16 +229,8 @@ const VoliCards = ({
       if (!user) return;
 
       try {
-        const res = await fetch(
-          `http://localhost:8080/api/preferiti/utente/${user.id}`,
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          }
-        );
-
-        if (!res.ok) throw new Error("Errore nel recupero dei preferiti");
-
-        const preferiti = await res.json();
+        const res = await preferitiAPI.getByUser(user.id);
+        const preferiti = res.data;
 
         // Cerca un match basato sui dettagli del volo
         const match = preferiti.find((p) => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { authAPI } from "../config/api";
 
 const FormAccedi = ({ show, onHide, onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,26 +19,16 @@ const FormAccedi = ({ show, onHide, onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const url = isLogin
-      ? "http://localhost:8080/api/utenti/login"
-      : "http://localhost:8080/api/utenti/register";
-
     const payload = isLogin
       ? { email, password }
       : { username, email, password };
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = isLogin
+        ? await authAPI.login(payload)
+        : await authAPI.register(payload);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Errore nella richiesta");
-      }
+      const data = response.data;
 
       if (isLogin) {
         localStorage.setItem("user", JSON.stringify(data));
@@ -56,7 +47,9 @@ const FormAccedi = ({ show, onHide, onLogin }) => {
         }, 1000);
       }
     } catch (error) {
-      setMessage({ type: "danger", text: error.message });
+      const errorMessage =
+        error.response?.data?.message || error.message || "Errore nella richiesta";
+      setMessage({ type: "danger", text: errorMessage });
     }
   };
 
